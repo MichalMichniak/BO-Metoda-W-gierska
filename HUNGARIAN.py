@@ -102,8 +102,13 @@ def zeros_ind_main(M, prev = None):
     # wywoływanie funkcji z każdym z zer
     for i in zeros:
         z = zeros_ind(M, [i[0]],[i[1]])
-        if len(z) >= len(prev) and z!=prev: return z
-    
+        if len(z) > len(prev) and z!=prev: return z
+    for j in zeros:
+        for i in zeros:
+            if i[0] == j[0] or i[1] == j[1]: continue
+            z = zeros_ind(M, [i[0],j[0]],[i[1],j[1]])
+            if len(z) >= len(prev) and z!=prev: return z
+    return z
     pass
 
 def minimalny_zbior_lini(M : np.array, niezalezne : List[Tuple]):
@@ -164,6 +169,7 @@ def hungarian_method(M):
     while True:
         # krok przygotowawczy
         M,temp = reduction(M)
+        print(M)
         # Krok 1: aktualizacja dolnego ograniczenia funkcji celu
         fi+=temp
         # Krok 2: wyznaczenie zer niezależnych
@@ -176,6 +182,9 @@ def hungarian_method(M):
         x_row,y_row = minimalny_zbior_lini(M, tab)
         # Krok 4: próba powiększenia zbioru zer niezależnych
         M,temp = pokrycie_update(M,x_row,y_row)
+        print("=================")
+        print(M)
+        print("=================")
         # Zwiększ wartość fi o krotność elementu minimalnego i przejdź do kroku 2
         fi+=temp
 
@@ -185,7 +194,8 @@ M = np.array([[5,2,3,2,7],
             [6,4,3,7,2],
             [6,9,0,4,0],
             [4,1,2,4,0]])
-M = numpy.random.random([6,6])
+M = numpy.random.randint(1,20,[50,50])
+
 
 lst,fi = hungarian_method(M)
 print(f"lista maszyn i przypisanych do nich zadań {lst} funkcja celu : {fi}")
