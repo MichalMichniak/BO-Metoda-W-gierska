@@ -1,0 +1,1 @@
+folder na używane funkcje (nie potrzeba do pliku głównego)
